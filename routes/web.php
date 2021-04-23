@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+Route::post('/categories', [CategoryController::class, 'create'])->name('categories.create');
+Route::post('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+Route::resource('post', 'App\Http\Controllers\PostController');
