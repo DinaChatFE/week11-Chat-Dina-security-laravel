@@ -6,6 +6,7 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -86,6 +87,9 @@ class PostController extends Controller
     public function update(PostRequest $request, $id)
     {
         $post = Post::findOrFail($id);
+        if (!Gate::allows('isEditable', $post)) {
+            abort(403);
+        }
         $post->update((array_merge($request->all(), ['created_at' => Carbon::now()])));
         return redirect()->route('post.index')->with('success', 'Update post successfully');
     }
@@ -99,6 +103,9 @@ class PostController extends Controller
     public function destroy($id)
     {
         $postid = Post::findOrFail($id);
+        if (!Gate::allows('isEditable', $postid)) {
+            abort(403);
+        }
         $postid->delete();
 
         return redirect('post')->with(['success' => "Delete successfully"]);
